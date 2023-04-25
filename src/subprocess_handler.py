@@ -1,8 +1,9 @@
 import subprocess
 import json
 import os
-from colors import Col
-from custom_types import ExitCode, DuplicatedFrames, DroppedFrames
+
+from .colors import Col
+from .custom_types import ExitCode, DuplicatedFrames, DroppedFrames
 
 
 def get_metadata(i: str) -> dict:

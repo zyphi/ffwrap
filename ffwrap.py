@@ -1,10 +1,10 @@
 import sys
 from datetime import datetime
 
-from io_handler import parse_args, print_command, print_metadata, check_inputs, check_outputs, print_result
-from misc import format_timedelta
-from subprocess_handler import spawn_ffmpeg
-from database import Database
+from src.io_handler import parse_args, print_command, print_metadata, check_inputs, check_outputs, print_result
+from src.misc import format_timedelta
+from src.subprocess_handler import spawn_ffmpeg
+from src.database import Database
 
 
 if __name__ == '__main__':

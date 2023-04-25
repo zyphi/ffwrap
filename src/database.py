@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-from colors import Col
+from .colors import Col
 
 
 class Database:
@@ -40,6 +40,16 @@ class Database:
             ]))
         return '\n\n'.join(formatted_entries)
 
+    def reset_table(self):
+        confirm = input(
+            f'{Col.warn}Are you sure you want to reset the database? [y/N]{Col.endc} ')
+        if confirm.lower() != 'y':
+            print(f'{Col.fail}Aborting{Col.endc}')
+            return
+        self.cur.execute(f"DROP TABLE renders")
+        self.__create_table()
+        print(f'{Col.green}Database reset{Col.endc}')
+
     def close_connection(self):
         self.conn.close()
 
@@ -77,7 +87,3 @@ class Database:
         self.cur.execute(
             "SELECT * FROM renders WHERE outputs LIKE ?", (f'%{o}%',))
         return self.__format_entries(self.cur.fetchall())
-
-
-with Database() as db:
-    print(db.get_all())

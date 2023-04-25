@@ -1,9 +1,9 @@
 import sys
 import os
-from colors import Col
-from custom_types import Command, Inputs, Outputs, ExitCode, DuplicatedFrames, DroppedFrames
 
-from subprocess_handler import get_metadata
+from .colors import Col
+from .custom_types import Command, Inputs, Outputs, ExitCode, DuplicatedFrames, DroppedFrames
+from .subprocess_handler import get_metadata
 
 
 def parse_args(args: list[str]) -> tuple[Command, Inputs, Outputs]:
