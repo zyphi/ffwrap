@@ -108,6 +108,28 @@ def print_metadata(inputs: Inputs) -> None:
                                 print(f'  bitdepth: {bitdepth}', end='')
                             print()
 
+                    elif track['@type'] == 'Image':
+                        codec = f"{track['Format']}" if 'Format' in track else None
+                        width = f"{track['Width']}" if 'Width' in track else None
+                        height = f"{track['Height']}" if 'Height' in track else None
+                        bitdepth = f"{track['BitDepth_String']}" if 'BitDepth_String' in track else None
+
+                        if (codec or width or height):
+                            if '@typeorder' in track.keys():
+                                print(
+                                    f'  {Col.header}Image{Col.endc} #{track["@typeorder"]}:', end='')
+                            else:
+                                print(
+                                    f'  {Col.header}Image{Col.endc}:', end='')
+                            if codec:
+                                print(f'  codec: {codec}', end='')
+                            if width and height:
+                                print(
+                                    f'  resolution: {width}x{height}', end='')
+                            if bitdepth:
+                                print(f'  bitdepth: {bitdepth}', end='')
+                            print()
+
             else:
                 print(f'{Col.warn}No tracks found{Col.endc}')
         else:
@@ -152,10 +174,11 @@ def print_command(command: Command) -> None:
         f'Spawning:\n  "{Col.green}{Col.underline}{" ".join(command)}{Col.endc}"\n')
 
 
-def print_result(exit_code: ExitCode, duplicated_frames: DuplicatedFrames, dropped_frames: DroppedFrames) -> None:
+def print_result(exit_code: ExitCode, duplicated_frames: DuplicatedFrames, dropped_frames: DroppedFrames, elapsed_time: str) -> None:
+    print(f'\n{"----- - " * 10}\nFinished after: {Col.bold}{elapsed_time}{Col.endc}')
     col = Col.blue if exit_code == 0 else Col.fail
     print(
-        f'\n{"----- - " * 10}\n{col}ffmpeg exited with code: {Col.bold}{exit_code}{Col.endc}')
+        f'{col}FFmpeg exited with code: {Col.bold}{exit_code}{Col.endc}')
     if duplicated_frames or dropped_frames:
         print(f'{Col.warn}Warning:{Col.endc}')
         if duplicated_frames:
