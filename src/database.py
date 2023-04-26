@@ -1,5 +1,6 @@
 import sqlite3
 import os
+from pathlib import Path
 
 from .date_utils import format_query_date
 
@@ -9,7 +10,13 @@ from .colors import Col
 class Database:
     def __init__(self):
         self.__create_db_folder()
-        self.conn = sqlite3.connect('db/ffwrap.db')
+        self.conn = sqlite3.connect(
+            os.path.join(
+                Path(__file__).parents[1],
+                'db',
+                'ffwrap.db'
+            )
+        )
         self.cur = self.conn.cursor()
         self.__create_table()
 
