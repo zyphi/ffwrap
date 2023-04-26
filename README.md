@@ -37,7 +37,7 @@ CLI tool for finding stuff in ffwrap's database.
 
 ## Aliases
 
-### Linux (Ubuntu, at least)
+### Linux (Ubuntu 20.04, at least)
 
 Save these two lines in .bashrc:
 
