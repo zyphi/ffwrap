@@ -29,6 +29,7 @@ if is_win:
         Col.yellow = Fore.LIGHTYELLOW_EX
         Col.warn = Fore.LIGHTMAGENTA_EX
         Col.fail = Fore.LIGHTRED_EX
+        Col.endc = Fore.RESET
     except:
         print('colorama not installed, using default colors')
 
