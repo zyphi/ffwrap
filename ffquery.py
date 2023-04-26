@@ -65,6 +65,12 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    '-dd',
+    help='find entries with duplicated or dropped frames',
+    action='store_true'
+)
+
+parser.add_argument(
     '-v',
     action='version',
     version=f'ffquery {VERSION}',
@@ -83,6 +89,11 @@ if __name__ == '__main__':
             print(db.find_by_message('FAILED', str(args.a), str(args.b)))
         elif args.I:
             print(db.find_by_message('INCOMPLETE', str(args.a), str(args.b)))
+        elif args.dd:
+            print(db.find_by_dd(
+                str(args.a),
+                str(args.b)
+            ))
         else:
             print(db.find_by_io(
                 args.i,

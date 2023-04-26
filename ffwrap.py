@@ -71,5 +71,5 @@ if __name__ == '__main__':
                 exit_code=exit_code,
                 duplicated_frames=duplicated_frames,
                 dropped_frames=dropped_frames,
-                message='SUCCESS' if exit_code == 0 and not duplicated_frames and not dropped_frames else 'FAILED'
+                message='SUCCESS' if exit_code == 0 else 'FAILED'
             )

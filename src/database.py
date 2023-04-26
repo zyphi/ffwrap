@@ -10,9 +10,9 @@ from .colors import Col
 class Database:
     def __init__(self):
         self.db_folder = os.path.join(
-                Path(__file__).parents[1],
-                'db'
-            )
+            Path(__file__).parents[1],
+            'db'
+        )
         self.__create_db_folder(self.db_folder)
         self.conn = sqlite3.connect(
             os.path.join(
@@ -141,6 +141,26 @@ class Database:
             "SELECT * FROM renders WHERE message LIKE ? AND start_time >= ? AND start_time <= ?",
             (
                 f'%{message}%',
+                a if result_a else "1964-01-01 00:00:00",
+                b if result_b else "2964-01-01 00:00:00"
+            )
+        )
+        return self.__format_entries(self.cur.fetchall())
+
+    def find_by_dd(self, after: str, before: str):
+        result_a, a = format_query_date(after)
+        result_b, b = format_query_date(before)
+
+        if not result_a:
+            print(
+                f'{Col.fail}Invalid date format for "-a". Using default value{Col.endc}')
+        if not result_b:
+            print(
+                f'{Col.fail}Invalid date format for "-b". Using default value{Col.endc}')
+
+        self.cur.execute(
+            "SELECT * FROM renders WHERE (duplicated_frames > 0 OR dropped_frames > 0) AND start_time >= ? AND start_time <= ?",
+            (
                 a if result_a else "1964-01-01 00:00:00",
                 b if result_b else "2964-01-01 00:00:00"
             )
