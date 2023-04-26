@@ -9,11 +9,14 @@ from .colors import Col
 
 class Database:
     def __init__(self):
-        self.__create_db_folder()
+        self.db_folder = os.path.join(
+                Path(__file__).parents[1],
+                'db'
+            )
+        self.__create_db_folder(self.db_folder)
         self.conn = sqlite3.connect(
             os.path.join(
-                Path(__file__).parents[1],
-                'db',
+                self.db_folder,
                 'ffwrap.db'
             )
         )
@@ -26,9 +29,9 @@ class Database:
     def __exit__(self, exc_type, exc_value, traceback):
         self.close_connection()
 
-    def __create_db_folder(self):
-        if not os.path.isdir('db'):
-            os.mkdir('db')
+    def __create_db_folder(self, db_folder):
+        if not os.path.isdir(db_folder):
+            os.mkdir(db_folder)
 
     def __create_table(self):
         self.cur.execute(
