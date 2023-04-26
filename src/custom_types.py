@@ -4,3 +4,4 @@ Outputs = list[str]
 ExitCode = int
 DuplicatedFrames = int
 DroppedFrames = int
+DateResult = tuple[bool, str]

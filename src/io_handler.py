@@ -6,10 +6,11 @@ from .custom_types import Command, Inputs, Outputs, ExitCode, DuplicatedFrames, 
 from .subprocess_handler import get_metadata
 
 
-def parse_args(args: list[str]) -> tuple[Command, Inputs, Outputs]:
+def parse_args(args: list[str]) -> tuple[Command, Inputs, Outputs, bool]:
     command = ['ffmpeg', '-v', 'warning', '-stats']
     inputs = []
     outputs = []
+    args_are_valid = True
 
     for idx, arg in enumerate(args):
         if arg == '-i':
@@ -20,7 +21,16 @@ def parse_args(args: list[str]) -> tuple[Command, Inputs, Outputs]:
         else:
             command.append(arg)
 
-    return command, inputs, outputs
+    if len(outputs) > 0 and len(command) > command.index(outputs[-1]) + 1:
+        if (
+            len(command) == command.index(outputs[-1]) + 2 and
+            command[-1] in ['-y', '-n']
+        ):
+            pass
+        else:
+            args_are_valid = False
+
+    return command, inputs, outputs, args_are_valid
 
 
 def print_metadata(inputs: Inputs) -> None:
@@ -138,16 +148,18 @@ def print_metadata(inputs: Inputs) -> None:
             print(f'{Col.warn}  No metadata found{Col.endc}')
 
 
-def check_inputs(inputs: Inputs) -> None:
+def check_inputs(inputs: Inputs) -> bool:
     if not inputs:
         print(f'{Col.fail}No input specified. Exiting{Col.endc}')
-        sys.exit(1)
+        return False
+
+    return True
 
 
-def check_outputs(outputs: Outputs, command: Command) -> None:
+def check_outputs(outputs: Outputs, command: Command) -> bool:
     if not outputs:
         print(f'{Col.fail}No output specified. Exiting{Col.endc}')
-        sys.exit(1)
+        return False
 
     existing_outputs = [
         o for o in outputs if os.path.exists(o)]
@@ -156,17 +168,23 @@ def check_outputs(outputs: Outputs, command: Command) -> None:
             'Overwrite existing output(s)? [y/N] ')
         if overwrite.lower() != 'y':
             print(f'{Col.fail}Not overwriting. Exiting{Col.endc}')
-            sys.exit(1)
+            return False
         else:
             command += ['-y']
     elif existing_outputs and '-y' in command:
         print(
             f'{Col.bold}Option "-y" detected. Overwriting existing output(s){Col.endc}')
+    elif existing_outputs and '-n' in command:
+        print(
+            f'{Col.bold}Option "-n" detected. Not overwriting existing output(s){Col.endc}')
+        return False
 
     for o in outputs:
         dirname = os.path.dirname(o)
         if dirname and not os.path.exists(dirname):
             os.makedirs(dirname)
+
+    return True
 
 
 def print_command(command: Command) -> None:
