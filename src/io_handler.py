@@ -106,7 +106,8 @@ def print_metadata(inputs: Inputs) -> None:
                                 print(
                                     f'  {Col.cyan}Audio{Col.endc} #{track["@typeorder"]}:', end='')
                             else:
-                                print(f'  {Col.cyan}Audio{Col.endc}:', end='')
+                                print(
+                                    f'  {Col.cyan}Audio{Col.endc}:', end='')
                             if codec:
                                 print(f'  codec: {codec}', end='')
                             if channels:
@@ -192,7 +193,8 @@ def print_command(command: Command) -> None:
 
 
 def print_result(exit_code: ExitCode, duplicated_frames: DuplicatedFrames, dropped_frames: DroppedFrames, elapsed_time: str) -> None:
-    print(f'\n{"----- - " * 10}\nFinished after: {Col.bold}{elapsed_time}{Col.endc}')
+    print(
+        f'\n{"----- - " * 10}\nFinished after: {Col.bold}{elapsed_time}{Col.endc}')
     col = Col.blue if exit_code == 0 else Col.fail
     print(
         f'{col}FFmpeg exited with code: {Col.bold}{exit_code}{Col.endc}')
@@ -202,4 +204,5 @@ def print_result(exit_code: ExitCode, duplicated_frames: DuplicatedFrames, dropp
             print(
                 f'{Col.fail}  duplicated frames: {Col.bold}{duplicated_frames}{Col.endc}')
         if dropped_frames:
-            print(f'{Col.fail}  dropped frames: {Col.bold}{dropped_frames}{Col.endc}')
+            print(
+                f'{Col.fail}  dropped frames: {Col.bold}{dropped_frames}{Col.endc}')
