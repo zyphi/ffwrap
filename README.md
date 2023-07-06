@@ -55,11 +55,11 @@ Create these two .bat files in a folder that is in your PATH:
 ```bash
 # ffwrap.bat
 @echo off
-python G:\DA-Tools\ffwrap\ffwrap.py %*
+python [VOLUME]:\path\to\ffwrap\ffwrap.py %*
 ```
 
 ```bash
 # ffquery.bat
 @echo off
-python G:\DA-Tools\ffwrap\ffquery.py %*
+python [VOLUME]:\path\to\ffwrap\ffquery.py %*
 ```
