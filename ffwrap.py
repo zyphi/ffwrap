@@ -10,17 +10,20 @@ from src.database import Database
 
 if __name__ == '__main__':
     start_time = datetime.now()
-    command, inputs, outputs, args_are_valid = parse_args(sys.argv[1:])
+    command, inputs, outputs, args_are_valid, custom_id = parse_args(
+        sys.argv[1:])
     if not args_are_valid:
         print(f'{Col.fail}Invalid arguments. Maybe you forgot an "-o"?{Col.endc}')
         exit(1)
+
     db_id = None
     with Database() as db:
         db_id = db.initialize_entry(
             command=' '.join(command),
             inputs=':::'.join(inputs),
             outputs=':::'.join(outputs),
-            start_time=start_time.strftime('%Y-%m-%d %H:%M:%S')
+            start_time=start_time.strftime('%Y-%m-%d %H:%M:%S'),
+            custom_id=custom_id.lower()
         )
         if not db_id:
             print(f'{Col.fail}Could not initialize database entry{Col.endc}')

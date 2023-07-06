@@ -35,13 +35,14 @@ class Database:
 
     def __create_table(self):
         self.cur.execute(
-            f"CREATE TABLE IF NOT EXISTS renders (id INTEGER PRIMARY KEY, command TEXT, inputs TEXT, outputs TEXT, total_time INTEGER, exit_code INTEGER, duplicated_frames INTEGER, dropped_frames INTEGER, start_time DATETIME, end_time DATETIME, message TEXT)")
+            f"CREATE TABLE IF NOT EXISTS renders (id INTEGER PRIMARY KEY, command TEXT, inputs TEXT, outputs TEXT, total_time INTEGER, exit_code INTEGER, duplicated_frames INTEGER, dropped_frames INTEGER, start_time DATETIME, end_time DATETIME, message TEXT, custom_id TEXT)")
         self.conn.commit()
 
     def __format_entries(self, entries: list[tuple]) -> str:
         if not entries:
             return f'{Col.fail}No entries found{Col.endc}'
         formatted_entries = []
+
         for e in entries:
             messcol = Col.yellow if e[10] == 'INCOMPLETE' else Col.blue if e[10] == 'SUCCESS' else Col.fail
             inputs = [i for i in e[2].split(':::') if i != '']
@@ -55,7 +56,8 @@ class Database:
                 f'  Exit code: {Col.cyan if e[5] == 0 else Col.fail}{e[5]}{Col.endc}' +
                 (f' {Col.yellow}(dup: {e[6]}, drop: {e[7]}){Col.endc}' if e[6]
                  or e[7] else ''),
-                f'  Result: {messcol}{e[10]}{Col.endc}' if e[10] else ''
+                f'  Result: {messcol}{e[10]}{Col.endc}' if e[10] else '',
+                f'  Custom ID: {Col.cyan}{e[11]}{Col.endc}' if e[11] else ''
             ]))
         return '\n\n'.join(formatted_entries + [f'{Col.underline}{Col.cyan}Total entries found: {len(formatted_entries)}{Col.endc}'])
 
@@ -78,10 +80,11 @@ class Database:
             inputs: str,
             outputs: str,
             start_time: str,
+            custom_id: str
     ) -> int | None:
         self.cur.execute(
-            f"INSERT INTO renders (command, inputs, outputs, start_time, message) VALUES (?, ?, ?, ?, ?)",
-            (command, inputs, outputs, start_time, 'INCOMPLETE')
+            f"INSERT INTO renders (command, inputs, outputs, start_time, message, custom_id) VALUES (?, ?, ?, ?, ?, ?)",
+            (command, inputs, outputs, start_time, 'INCOMPLETE', custom_id)
         )
         self.conn.commit()
         return self.cur.lastrowid
@@ -164,5 +167,12 @@ class Database:
                 a if result_a else "1964-01-01 00:00:00",
                 b if result_b else "2964-01-01 00:00:00"
             )
+        )
+        return self.__format_entries(self.cur.fetchall())
+
+    def find_by_custom_id(self, custom_id: str):
+        self.cur.execute(
+            "SELECT * FROM renders WHERE custom_id LIKE '%' || ? || '%'",
+            (custom_id,)
         )
         return self.__format_entries(self.cur.fetchall())

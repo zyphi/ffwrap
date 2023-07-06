@@ -1,15 +1,16 @@
 import os
 
 from .colors import Col
-from .custom_types import Command, Inputs, Outputs, ExitCode, DuplicatedFrames, DroppedFrames
+from .custom_types import Command, Inputs, Outputs, ExitCode, DuplicatedFrames, DroppedFrames, CommandID
 from .subprocess_handler import get_metadata
 
 
-def parse_args(args: list[str]) -> tuple[Command, Inputs, Outputs, bool]:
+def parse_args(args: list[str]) -> tuple[Command, Inputs, Outputs, bool, CommandID]:
     command = ['ffmpeg', '-v', 'warning', '-stats']
     inputs = []
     outputs = []
     args_are_valid = True
+    custom_id = ''
 
     for idx, arg in enumerate(args):
         if arg == '-i':
@@ -17,7 +18,9 @@ def parse_args(args: list[str]) -> tuple[Command, Inputs, Outputs, bool]:
             command.append(arg)
         elif arg == '-o':
             outputs.append(args[idx + 1])
-        else:
+        elif arg == '-ö':
+            custom_id = args[idx + 1].lower()
+        elif not args[idx - 1] == '-ö':
             command.append(arg)
 
     if len(outputs) > 0 and len(command) > command.index(outputs[-1]) + 1:
@@ -29,7 +32,7 @@ def parse_args(args: list[str]) -> tuple[Command, Inputs, Outputs, bool]:
         else:
             args_are_valid = False
 
-    return command, inputs, outputs, args_are_valid
+    return command, inputs, outputs, args_are_valid, custom_id
 
 
 def print_metadata(inputs: Inputs) -> None:

@@ -5,3 +5,4 @@ ExitCode = int
 DuplicatedFrames = int
 DroppedFrames = int
 DateResult = tuple[bool, str]
+CommandID = str

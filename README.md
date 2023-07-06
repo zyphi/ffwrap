@@ -2,7 +2,7 @@
 
 ## ffwrap.py
 
-Wrapper around FFmpeg with customized terminal output, metadata for input(s) and simple database.
+Wrapper around FFmpeg with customized terminal output, metadata for input(s) and tiny database.
 
 ### Dependencies
 
@@ -17,6 +17,7 @@ Use `python[3] path/to/ffwrap/ffwrap.py` (or just `ffwrap`, if there is an alias
 
 - The output(s) must be preceded by `-o`.
 - After the last output, the only valid options are `-y` and `-n`.
+- The special tag `-ö` can be used to assign a custom id to the process. This id will be saved in the database and can be used to query the database later.
 
 ## ffquery.py
 
@@ -34,6 +35,7 @@ CLI tool for finding stuff in ffwrap's database.
 - i --> find entries by input file (case insensitive)
 - o --> find entries by output file (case insensitive)
 - v --> print version number and exit
+- ö --> find entries by custom id (case insensitive)
 
 ## Aliases
 

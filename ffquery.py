@@ -77,6 +77,13 @@ parser.add_argument(
     help='print version number and exit'
 )
 
+parser.add_argument(
+    '-ö',
+    help='find entries by custom id',
+    default='',
+    metavar=''
+)
+
 if __name__ == '__main__':
     args = parser.parse_args()
 
@@ -93,6 +100,10 @@ if __name__ == '__main__':
             print(db.find_by_dd(
                 str(args.a),
                 str(args.b)
+            ))
+        elif args.ö:
+            print(db.find_by_custom_id(
+                str(args.ö)
             ))
         else:
             print(db.find_by_io(
