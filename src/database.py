@@ -38,7 +38,7 @@ class Database:
             f"CREATE TABLE IF NOT EXISTS renders (id INTEGER PRIMARY KEY, command TEXT, inputs TEXT, outputs TEXT, total_time INTEGER, exit_code INTEGER, duplicated_frames INTEGER, dropped_frames INTEGER, start_time DATETIME, end_time DATETIME, message TEXT, custom_id TEXT)")
         self.conn.commit()
 
-    def __format_entries(self, entries: list[tuple]) -> str:
+    def __format_entries(self, entries: list[tuple], summary: bool = False) -> str:
         if not entries:
             return f'{Col.fail}No entries found{Col.endc}'
         formatted_entries = []
@@ -59,7 +59,24 @@ class Database:
                 f'  Result: {messcol}{e[10]}{Col.endc}' if e[10] else '',
                 f'  Custom ID: {Col.cyan}{e[11]}{Col.endc}' if e[11] else ''
             ]))
-        return '\n\n'.join(formatted_entries + [f'{Col.underline}{Col.cyan}Total entries found: {len(formatted_entries)}{Col.endc}'])
+        total_success = len(
+            [e for e in entries if e[10] == 'SUCCESS'])
+        total_failed = len(
+            [e for e in entries if e[10] == 'FAILED'])
+        total_incomplete = len(
+            [e for e in entries if e[10] == 'INCOMPLETE'])
+
+        total_entries_label = 'Total entries found:'
+        formatted_entries = '\n\n'.join(
+            formatted_entries + [f'{Col.underline}{Col.cyan}{total_entries_label}{" " * (25 - len(total_entries_label))}{len(formatted_entries)}{Col.endc}'])
+
+        if summary:
+            total_success_label = 'Total successful:'
+            total_failed_label = 'Total failed:'
+            total_incomplete_label = 'Total incomplete:'
+            formatted_entries += f'\n\n{Col.green}{total_success_label}{" " * (25 - len(total_success_label))}{total_success}{Col.endc}\n{Col.fail}{total_failed_label}{" " * (25 - len(total_failed_label))}{total_failed}{Col.endc}\n{Col.yellow}{total_incomplete_label}{" " * (25 - len(total_incomplete_label))}{total_incomplete}{Col.endc}\n{Col.underline}{" " * 30}{Col.endc}\n'
+
+        return formatted_entries
 
     def reset_table(self):
         confirm = input(
@@ -175,4 +192,5 @@ class Database:
             "SELECT * FROM renders WHERE custom_id LIKE '%' || ? || '%'",
             (custom_id,)
         )
-        return self.__format_entries(self.cur.fetchall())
+
+        return self.__format_entries(self.cur.fetchall(), summary=True)

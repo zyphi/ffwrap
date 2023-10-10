@@ -1,7 +1,7 @@
 import argparse
 from src.database import Database
 
-VERSION = '1.0.0'
+VERSION = '1.0.1'
 
 parser = argparse.ArgumentParser(
     prog='ffquery',
