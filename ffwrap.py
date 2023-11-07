@@ -11,7 +11,9 @@ from src.database import Database
 if __name__ == '__main__':
     start_time = datetime.now()
     command, inputs, outputs, args_are_valid, custom_id = parse_args(
-        sys.argv[1:])
+        sys.argv[1:]
+        )
+    
     if not args_are_valid:
         print(f'{Col.fail}Invalid arguments. Maybe you forgot an "-o"?{Col.endc}')
         exit(1)

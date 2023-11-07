@@ -82,7 +82,7 @@ def print_metadata(inputs: Inputs) -> None:
                                     f'  {Col.header}Video{Col.endc} #{track["@typeorder"]}:', end='')
                             else:
                                 print(
-                                    f'  {Col.header}Video{Col.endc}:', end='')
+                                    f'  {Col.header}Video{Col.endc}  :', end='')
                             if codec:
                                 print(f'  codec: {codec}', end='')
                             if width and height:
@@ -110,7 +110,7 @@ def print_metadata(inputs: Inputs) -> None:
                                     f'  {Col.cyan}Audio{Col.endc} #{track["@typeorder"]}:', end='')
                             else:
                                 print(
-                                    f'  {Col.cyan}Audio{Col.endc}:', end='')
+                                    f'  {Col.cyan}Audio{Col.endc}  :', end='')
                             if codec:
                                 print(f'  codec: {codec}', end='')
                             if channels:
