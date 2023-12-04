@@ -33,8 +33,10 @@ def spawn_ffmpeg(command: list[str]) -> tuple[ExitCode, DuplicatedFrames, Droppe
             line += char
             if char in ['\n', '\r']:
                 if 'dup' in line:
-                    duplicated_frames = int(
-                        line.split('dup=')[-1].split(' ')[0])
+                    dup_substring = line.split('dup=')[-1].split(' ')[0]
+                    if dup_substring.isdigit():
+                        duplicated_frames = int(
+                            line.split('dup=')[-1].split(' ')[0])
 
                 if 'drop' in line:
                     dropped_frames = int(line.split('drop=')[-1].split(' ')[0])
